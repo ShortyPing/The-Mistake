@@ -6,7 +6,7 @@ Congratulations — you’ve officially crossed into my personal descent into ma
 This repository is my **self-invitation to a psychiatric institution**. Why?  
 Because somewhere around 2 AM, I decided it was a good idea to write a **raytracer in COBOL** — yes, *that* COBOL.  
 The same COBOL your grandma’s bank still uses to figure out interest on a savings account she forgot she even had.  
-*(Fun fact: your grandma’s Account still pays more interest than my brain after this project.)*
+*(Fun fact: your grandma’s account still pays more interest than my brain after this project.)*
 
 ---
 
