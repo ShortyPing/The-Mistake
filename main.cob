@@ -26,7 +26,7 @@ data division.
        05 sphere-x pic s9(5)v9(5) value +0.
        05 sphere-y pic s9(5)v9(5) value +0.
        05 sphere-z pic s9(5)v9(5) value +5.
-      01 sphere-radius pic s9(5)v9(5) value 1.6.
+      01 sphere-radius pic s9(5)v9(5) value 1.
 
 
        01 dx pic s9(5).
@@ -42,6 +42,8 @@ data division.
        01 SC   PIC S9(5)V9(5).
        01 DISCRIMINANT PIC S9(5)V9(5).
        01 T-HIT PIC S9(5)V9(5).
+
+
               
 
       01 T pic s9(5)v9(5).
@@ -56,7 +58,22 @@ data division.
       01 g pic 9(3).
       01 b pic 9(3).      
 
-      01 shade pic 9(3).                      
+      01 shade pic 9(3).      
+
+
+      01 hit-x PIC S9(5)V9(5).
+       01 hit-y PIC S9(5)V9(5).
+       01 hit-z PIC S9(5)V9(5).
+       
+       01 nx PIC S9(5)V9(5).    *> normal x
+       01 ny PIC S9(5)V9(5).    *> normal y
+       01 nz PIC S9(5)V9(5).    *> normal z
+       
+       01 lx PIC S9(5)V9(5) VALUE +0.577. *> light direction x              
+       01 ly PIC S9(5)V9(5) VALUE +0.577. *> light direction y
+       01 lz PIC S9(5)V9(5) VALUE -0.577. *> light coming straight at sphere
+       
+       01 brightness PIC S9(5)V9(5).                
 procedure division.
        open output out-file
        move "P3" to out-rec
@@ -87,7 +104,26 @@ procedure division.
                compute DISCRIMINANT = (SB * SB) - (4 * SA * SC)         
 
                if DISCRIMINANT >= 0
-                   move 255 to r
+                   compute t-hit = (-SB - FUNCTION SQRT(DISCRIMINANT)) / (2 * SA)
+
+
+                   compute hit-x = origin-x + (t-hit * dir-x)
+                   compute hit-y = origin-y + (t-hit * dir-y)
+                   compute hit-z = origin-z + (t-hit * dir-z)
+
+                   compute nx = (hit-x - sphere-x) / sphere-radius
+                   compute ny = (hit-y - sphere-y) / sphere-radius
+                   compute nz = (hit-z - sphere-z) / sphere-radius
+               
+                   
+                   compute brightness = (nx * lx) + (ny * ly) + (nz * lz)
+
+
+                   if brightness < 0
+                       move 0 to brightness
+                   end-if          
+
+                   compute r = 255 * brightness                                        
                    move 0 to g
                    move 0 to b
                else
