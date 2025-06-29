@@ -17,9 +17,28 @@ data division.
       01 ray-origin.
        05 origin-x pic s9(5)v9(5) value +0.
        05 origin-y pic s9(5)v9(5) value +0.                         
-       05 origin-z pic s9(5)v9(5) value +0.
+       05 origin-z pic s9(5)v9(5) value +0.                             
+      01 ray-direction.
+       05 dir-x pic s9(5)v9(5) value +0.
+       05 dir-y pic s9(5)v9(5) value +0.
+       05 dir-z pic s9(5)v9(5) value +0.
+      01 sphere-center.
+       05 sphere-x pic s9(5)v9(5) value +0.
+       05 sphere-y pic s9(5)v9(5) value +0.
+       05 sphere-z pic s9(5)v9(5) value +5.
+
+
+       01 dx pic s9(5).
+       01 dy pic s9(5).
+       01 dist2 pic s9(5).
+       01 rad2 pic s9(5).
+       
+
+      01 T pic s9(5)v9(5).
       01 width pic 9(3) value 200.
-      01 height pic 9(3) value 200.                                     
+      01 height pic 9(3) value 200.     
+
+
       01 X pic 9(3).
       01 Y pic 9(3).
       01 Z pic 9(3).        
@@ -34,11 +53,21 @@ procedure division.
        write out-rec
        move "255" to out-rec
        write out-rec
+       compute rad2 = 50 * 50
        perform varying y from 1 by 1 until y > height
            perform varying x from 1 by 1 until x > width
-               compute r = (x * 255) / width
-               compute g = (y * 255) / height
-               compute b = 128
+               compute dx = x - 100
+               compute dy = y - 100
+               compute dist2 = (dx * dx) + (dy * dy)
+               if dist2 < rad2
+                   move 255 to r
+                   move 0 to g
+                   move 0 to b
+               else
+                   move 0 to r
+                   move 0 to g
+                   move 255 to b
+               end-if
                string r delimited by size
                    " " delimited by size
                    g delimited by size
@@ -49,4 +78,6 @@ procedure division.
            end-perform
        end-perform
        close out-file
-       stop run.                                                        
+       stop run.             
+check-hit.
+       compute T = (dir-x * sphere-x) + (dir-y * sphere-y) + (dir-z * sphere-z).                                             
