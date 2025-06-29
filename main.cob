@@ -44,7 +44,9 @@ data division.
       01 Z pic 9(3).        
       01 r pic 9(3).
       01 g pic 9(3).
-      01 b pic 9(3).                           
+      01 b pic 9(3).      
+
+      01 shade pic 9(3).                      
 procedure division.
        open output out-file
        move "P3" to out-rec
@@ -60,7 +62,11 @@ procedure division.
                compute dy = y - 100
                compute dist2 = (dx * dx) + (dy * dy)
                if dist2 < rad2
-                   move 255 to r
+                   compute shade = 255 - (dist2 / 10)
+                   if shade < 0
+                       move 0 to shade
+                   end-if
+                   move shade to r
                    move 0 to g
                    move 0 to b
                else

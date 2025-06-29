@@ -6,5 +6,6 @@ all:
 run:
 	chmod +x $(PROGRAM)
 	./$(PROGRAM)
+	open output.ppm
 clean:
 	rm -rf $(PROGRAM)
