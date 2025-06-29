@@ -26,13 +26,23 @@ data division.
        05 sphere-x pic s9(5)v9(5) value +0.
        05 sphere-y pic s9(5)v9(5) value +0.
        05 sphere-z pic s9(5)v9(5) value +5.
+      01 sphere-radius pic s9(5)v9(5) value 1.6.
 
 
        01 dx pic s9(5).
        01 dy pic s9(5).
        01 dist2 pic s9(5).
        01 rad2 pic s9(5).
-       
+
+       01 ocx PIC S9(5)V9(5).
+       01 ocy PIC S9(5)V9(5).
+       01 ocz PIC S9(5)V9(5).
+       01 SA   PIC S9(5)V9(5).
+       01 SB   PIC S9(5)V9(5).
+       01 SC   PIC S9(5)V9(5).
+       01 DISCRIMINANT PIC S9(5)V9(5).
+       01 T-HIT PIC S9(5)V9(5).
+              
 
       01 T pic s9(5)v9(5).
       01 width pic 9(3) value 200.
@@ -58,15 +68,26 @@ procedure division.
        compute rad2 = 50 * 50
        perform varying y from 1 by 1 until y > height
            perform varying x from 1 by 1 until x > width
-               compute dx = x - 100
-               compute dy = y - 100
-               compute dist2 = (dx * dx) + (dy * dy)
-               if dist2 < rad2
-                   compute shade = 255 - (dist2 / 10)
-                   if shade < 0
-                       move 0 to shade
-                   end-if
-                   move shade to r
+               compute dir-x = (x - 100) / 100
+               compute dir-y = (y - 100) / 100
+               compute dir-z = 1
+
+               move 0 to origin-x
+               move 0 to origin-y
+               move 0 to origin-z
+
+               compute ocx = origin-x - sphere-x
+               compute ocy = origin-y - sphere-y
+               compute ocz = origin-z - sphere-z
+
+
+               compute SA = (dir-x * dir-x) + (dir-y * dir-y) + (dir-z * dir-z)
+               compute SB = 2 * ((dir-x * ocx) + (dir-y * ocy) + (dir-z * ocz))
+               compute SC = (ocx * ocx) + (ocy * ocy) + (ocz * ocz) - (sphere-radius * sphere-radius)
+               compute DISCRIMINANT = (SB * SB) - (4 * SA * SC)         
+
+               if DISCRIMINANT >= 0
+                   move 255 to r
                    move 0 to g
                    move 0 to b
                else
@@ -74,6 +95,7 @@ procedure division.
                    move 0 to g
                    move 255 to b
                end-if
+           
                string r delimited by size
                    " " delimited by size
                    g delimited by size
