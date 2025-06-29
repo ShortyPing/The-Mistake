@@ -41,7 +41,8 @@ Hence, the psychiatric invitation.
 
 1. Install a COBOL compiler. (If you didn’t run away screaming yet.)
 2. Compile:
-   make all run
+   ```bash
+   make all run```
 3. Behold `output.ppm` — the pixelated culmination of my therapy needs.
 4. Open it with anything that reads PPM, or convert it:
    convert output.ppm output.png
